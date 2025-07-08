@@ -1,0 +1,23 @@
+[
+    {
+      "id": 1,
+      "nama": "Parkir Mall A",
+      "alamat": "Jl. Merdeka No.10",
+      "tarif": 5000,
+      "slot_tersedia": 12,
+      "total_slot": 20,
+      "rating": 4.5,
+      "gambar": "/placeholder-parkir.jpg"
+    },
+    {
+      "id": 2,
+      "nama": "Parkir Kampus B",
+      "alamat": "Jl. Pendidikan No.5",
+      "tarif": 3000,
+      "slot_tersedia": 8,
+      "total_slot": 15,
+      "rating": 4.2,
+      "gambar": "/placeholder-parkir.jpg"
+    }
+  ]
+  
