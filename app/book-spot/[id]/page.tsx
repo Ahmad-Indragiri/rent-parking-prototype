@@ -1,16 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter, useParams } from 'next/navigation'
+import { useRouter } from 'next/navigation' // 'useParams' dihapus dari sini
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 
 // Data dummy untuk spot yang sudah terisi.
-// Dalam aplikasi nyata, ini bisa datang dari database.
 const takenSpots = ['A3', 'B1', 'C4', 'D2'];
 
 export default function BookSpotPage() {
   const router = useRouter();
-  const params = useParams();
+  // const params = useParams(); // <-- BARIS INI DIHAPUS
   const [selectedSpot, setSelectedSpot] = useState<string | null>(null);
   const [lokasiNama, setLokasiNama] = useState('');
 
@@ -30,14 +29,12 @@ export default function BookSpotPage() {
     }
   }, []);
 
-  // --- FUNGSI INI YANG DIUBAH ---
   const handleConfirmSpot = () => {
     if (!selectedSpot) {
       alert('Silakan pilih slot parkir terlebih dahulu.');
       return;
     }
 
-    // 1. Ambil data reservasi sementara
     const pendingData = localStorage.getItem('pending_reservasi');
     if (!pendingData) {
       alert('Sesi reservasi tidak ditemukan. Silakan ulangi.');
@@ -46,13 +43,10 @@ export default function BookSpotPage() {
     }
     const reservasi = JSON.parse(pendingData);
 
-    // 2. Tambahkan spot yang dipilih ke data reservasi sementara
     reservasi.spot_terpilih = selectedSpot;
     
-    // 3. Simpan kembali data yang sudah terupdate
     localStorage.setItem('pending_reservasi', JSON.stringify(reservasi));
 
-    // 4. Alihkan ke halaman pembayaran
     router.push('/payment');
   };
 
