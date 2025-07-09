@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '**',
       },
+      // Tambahkan domain baru di sini
+      {
+        protocol: 'https',
+        hostname: 'user-images.githubusercontent.com',
+      },
     ],
   },
 };

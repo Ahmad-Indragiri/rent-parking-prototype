@@ -1,57 +1,75 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { ShieldCheckIcon } from '@heroicons/react/24/solid'
 
 export default function AdminLoginPage() {
-  const router = useRouter()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const router = useRouter();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const ADMIN_USERNAME = 'admin';
+    const ADMIN_PASSWORD = 'admin123';
 
-    if (username === 'admin' && password === 'admin123') {
-      localStorage.setItem('admin', 'true')
-      router.push('/admin/dashboard')
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      localStorage.setItem('isAdminLoggedIn', 'true');
+      router.push('/admin/dashboard');
     } else {
-      setError('Username atau password salah!')
+      setError('Invalid admin username or password.');
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md space-y-4"
-      >
-        <h1 className="text-xl font-bold text-center text-blue-700">Login Admin</h1>
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="w-full max-w-sm p-8 space-y-6 bg-white rounded-2xl shadow-md">
+        
+        <div className="text-center">
+            <ShieldCheckIcon className="w-12 h-12 mx-auto text-gray-400"/>
+            <h1 className="text-3xl font-bold text-gray-800 mt-2">Admin Login</h1>
+            <p className="text-gray-500">Access the management dashboard.</p>
+        </div>
 
-        <input
-          type="text"
-          placeholder="Username"
-          className="w-full border px-3 py-2 rounded"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <form onSubmit={handleAdminLogin} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 sr-only">Username</label>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="mt-1 w-full p-3 bg-gray-100 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border px-3 py-2 rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 sr-only">Password</label>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 w-full p-3 bg-gray-100 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-        >
-          Login
-        </button>
-      </form>
+          {error && (
+            <p className="text-sm text-center text-red-600">{error}</p>
+          )}
+
+          <button
+            type="submit"
+            className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+          >
+            Log In
+          </button>
+        </form>
+      </div>
     </div>
-  )
+  );
 }

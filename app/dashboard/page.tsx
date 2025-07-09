@@ -5,6 +5,7 @@ import ParkirCard from '@/public/components/ParkirCard'
 import ChatbotFAQ from '@/public/components/ChatbotFAQ'
 import BottomNav from '@/public/components/BottomNav' // Import komponen baru
 import { BellIcon, MagnifyingGlassIcon, ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline'
+import dynamic from 'next/dynamic'
 
 // Definisikan tipe data
 type Lokasi = {
@@ -37,6 +38,11 @@ export default function Dashboard() {
   const [lokasiList, setLokasiList] = useState<Lokasi[]>([])
   const [activeFilter, setActiveFilter] = useState('Promotions')
   const [isChatOpen, setIsChatOpen] = useState(false)
+
+  
+const MapView = dynamic(() => import('@/public/components/MapView'), {
+  ssr: false
+})
 
   useEffect(() => {
     // Fitur fetch data parkir Anda tetap ada
@@ -113,11 +119,10 @@ export default function Dashboard() {
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
-                  activeFilter === filter
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition ${activeFilter === filter
                     ? 'bg-gray-800 text-white'
                     : 'bg-gray-100 text-gray-700'
-                }`}
+                  }`}
               >
                 {filter}
               </button>
@@ -125,24 +130,24 @@ export default function Dashboard() {
           </div>
 
           {/* Map Image */}
-          <div className="w-full h-48 mb-6 overflow-hidden rounded-xl">
-              <img src="https://user-images.githubusercontent.com/39943537/236122602-2334421b-8521-4363-9993-4e4835a51372.png" alt="Map" className="object-cover w-full h-full" />
+          <div className="w-full mb-6">
+            <MapView />
           </div>
 
           {/* Dynamic Content Area */}
           {renderContent()}
         </main>
       </div>
-      
+
       {/* Fitur Chatbot Anda sebagai FAB */}
       <div className="fixed z-40 right-4 bottom-24">
         {isChatOpen && <ChatbotFAQ />}
-        <button 
-          onClick={() => setIsChatOpen(!isChatOpen)} 
+        <button
+          onClick={() => setIsChatOpen(!isChatOpen)}
           className="p-4 mt-2 text-white bg-blue-600 rounded-full shadow-lg hover:bg-blue-700"
           aria-label="Toggle Chatbot"
         >
-          <ChatBubbleOvalLeftEllipsisIcon className="w-8 h-8"/>
+          <ChatBubbleOvalLeftEllipsisIcon className="w-8 h-8" />
         </button>
       </div>
 
