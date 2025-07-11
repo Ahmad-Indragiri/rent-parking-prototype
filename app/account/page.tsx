@@ -30,15 +30,15 @@ type MenuItemProps = {
 
 // Data untuk menu items dengan href yang benar
 const accountMenuItems: MenuItemProps[] = [
-  { icon: UserCircleIcon, label: 'Profile', href: '/profile' },
-  { icon: CreditCardIcon, label: 'Payment Methods', href: '/payment-methods' },
-  { icon: TruckIcon, label: 'Vehicles', href: '/vehicles' },
+  { icon: UserCircleIcon, label: 'Profil', href: '/profile' },
+  { icon: CreditCardIcon, label: 'Metode Pembayaran', href: '/payment-methods' },
+  { icon: TruckIcon, label: 'Kendaraanmu', href: '/vehicles' },
 ]
 
 const settingsMenuItems: MenuItemProps[] = [
-  { icon: BellIcon, label: 'Notifications', href: '/notifications' },
-  { icon: GlobeAltIcon, label: 'Language', href: '/language' },
-  { icon: QuestionMarkCircleIcon, label: 'Help & Support', href: '/help-support' },
+  { icon: BellIcon, label: 'Notifikasi', href: '/notifications' },
+  { icon: GlobeAltIcon, label: 'Bahasa', href: '/language' },
+  { icon: QuestionMarkCircleIcon, label: 'Bantuan & Dukungan', href: '/help-support' },
 ]
 
 // Komponen kecil untuk setiap baris menu
@@ -92,7 +92,7 @@ export default function AccountPage() {
             <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
           </button>
           <h1 className="flex-grow text-xl font-bold text-center text-gray-800">
-            Account
+            Akun
           </h1>
           <div className="w-7" />
         </header>
@@ -101,7 +101,7 @@ export default function AccountPage() {
           <section className="flex flex-col items-center py-8 text-center">
             <div className="relative w-28 h-28 mb-4">
               <Image
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
+                src="/propil.jpg"
                 alt="Profile Avatar"
                 layout="fill"
                 className="rounded-full object-cover"
@@ -115,7 +115,7 @@ export default function AccountPage() {
 
           <div className="space-y-6">
             <section>
-              <h3 className="px-3 mb-2 text-lg font-semibold text-gray-800">Account</h3>
+              <h3 className="px-3 mb-2 text-lg font-semibold text-gray-800">Akun</h3>
               <div className="space-y-2">
                 {accountMenuItems.map((item) => (
                   <MenuItem key={item.label} {...item} />
@@ -124,7 +124,7 @@ export default function AccountPage() {
             </section>
 
             <section>
-              <h3 className="px-3 mb-2 text-lg font-semibold text-gray-800">Settings</h3>
+              <h3 className="px-3 mb-2 text-lg font-semibold text-gray-800">Pengaturan</h3>
               <div className="space-y-2">
                 {settingsMenuItems.map((item) => (
                   <MenuItem key={item.label} {...item} />
@@ -141,7 +141,7 @@ export default function AccountPage() {
                 <div className="p-2 bg-red-50 rounded-md">
                   <ArrowRightOnRectangleIcon className="w-6 h-6" />
                 </div>
-                <span className="font-medium">Log Out</span>
+                <span className="font-medium">Keluar</span>
               </button>
             </section>
           </div>

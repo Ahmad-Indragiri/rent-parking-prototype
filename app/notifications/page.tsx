@@ -67,7 +67,7 @@ export default function NotificationsPage() {
           <ChevronLeftIcon className="w-6 h-6 text-gray-800" />
         </button>
         <h1 className="flex-grow text-xl font-bold text-center text-gray-900">
-          Notifications
+          Notifikasi
         </h1>
         <div className="w-7" />
       </header>
@@ -77,32 +77,32 @@ export default function NotificationsPage() {
           
           <div className="py-4 flex justify-between items-center">
             <div>
-              <p className="font-semibold text-gray-800">Promotions & Offers</p>
-              <p className="text-sm text-gray-500">Receive updates about special discounts.</p>
+              <p className="font-semibold text-gray-800">Promosi & Penawaran</p>
+              <p className="text-sm text-gray-500">Terima pembaruan tentang diskon khusus.</p>
             </div>
             <ToggleSwitch enabled={settings.promotions} onChange={() => handleToggle('promotions')} />
           </div>
 
           <div className="py-4 flex justify-between items-center">
             <div>
-              <p className="font-semibold text-gray-800">Reservation Reminders</p>
-              <p className="text-sm text-gray-500">Get reminders before your booking time.</p>
+              <p className="font-semibold text-gray-800">Pengingat Reservasi</p>
+              <p className="text-sm text-gray-500">Dapatkan pengingat sebelum waktu pemesanan Anda.</p>
             </div>
             <ToggleSwitch enabled={settings.reservationReminders} onChange={() => handleToggle('reservationReminders')} />
           </div>
           
           <div className="py-4 flex justify-between items-center">
             <div>
-              <p className="font-semibold text-gray-800">Payment Confirmations</p>
-              <p className="text-sm text-gray-500">Receive a notification for every transaction.</p>
+              <p className="font-semibold text-gray-800">Konfirmasi Pembayaran</p>
+              <p className="text-sm text-gray-500">Terima pemberitahuan untuk setiap transaksi.</p>
             </div>
             <ToggleSwitch enabled={settings.paymentConfirmations} onChange={() => handleToggle('paymentConfirmations')} />
           </div>
 
           <div className="py-4 flex justify-between items-center">
             <div>
-              <p className="font-semibold text-gray-800">App Updates</p>
-              <p className="text-sm text-gray-500">Get notified when new features are available.</p>
+              <p className="font-semibold text-gray-800">Pembaruan Aplikasi</p>
+              <p className="text-sm text-gray-500">Dapatkan pemberitahuan saat fitur baru tersedia.</p>
             </div>
             <ToggleSwitch enabled={settings.appUpdates} onChange={() => handleToggle('appUpdates')} />
           </div>

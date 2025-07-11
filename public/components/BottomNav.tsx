@@ -5,10 +5,10 @@ import { HomeIcon, MagnifyingGlassIcon, CalendarDaysIcon, UserCircleIcon } from 
 
 // Konfigurasi item navigasi
 const navItems = [
-  { href: '/dashboard', icon: HomeIcon, label: 'Home' },
-  { href: '/search', icon: MagnifyingGlassIcon, label: 'Search' },
-  { href: '/riwayat', icon: CalendarDaysIcon, label: 'Reservations' },
-  { href: '/account', icon: UserCircleIcon, label: 'Account' },
+  { href: '/dashboard', icon: HomeIcon, label: 'Beranda' },
+  { href: '/search', icon: MagnifyingGlassIcon, label: 'Pencarian' },
+  { href: '/riwayat', icon: CalendarDaysIcon, label: 'Reservasi' },
+  { href: '/account', icon: UserCircleIcon, label: 'Akun' },
 ]
 
 export default function BottomNav() {

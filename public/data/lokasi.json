@@ -1,23 +1,23 @@
 [
     {
       "id": 1,
-      "nama": "Parkir Mall A",
-      "alamat": "Jl. Merdeka No.10",
+      "nama": "Parkir Artos Mall ",
+      "alamat": "Jl. Mertoyudan No.10",
       "tarif": 5000,
-      "slot_tersedia": 12,
-      "total_slot": 20,
+      "slot_tersedia": 5,
+      "total_slot": 10,
       "rating": 4.5,
-      "gambar": "/placeholder-parkir.jpg"
+      "gambar": "/artos.jpeg"
     },
     {
       "id": 2,
-      "nama": "Parkir Kampus B",
-      "alamat": "Jl. Pendidikan No.5",
-      "tarif": 3000,
+      "nama": "Kampus 1 Unimma",
+      "alamat": "Jl. Mayjend Bambang Soegeng KM 5",
+      "tarif": 1000,
       "slot_tersedia": 8,
       "total_slot": 15,
       "rating": 4.2,
-      "gambar": "/placeholder-parkir.jpg"
+      "gambar": "/kampus2.jpeg"
     }
   ]
   

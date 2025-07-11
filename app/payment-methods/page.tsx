@@ -61,14 +61,14 @@ export default function PaymentMethodsPage() {
           <ChevronLeftIcon className="w-6 h-6 text-gray-800" />
         </button>
         <h1 className="flex-grow text-xl font-bold text-center text-gray-900">
-          Payment Methods
+          Metode Pembayaran
         </h1>
         <div className="w-7" />
       </header>
 
       <main className="p-6">
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-800">Your Cards</h2>
+          <h2 className="text-lg font-semibold text-gray-800">Kartu Pembayaranmu</h2>
           
           {methods.map(method => (
             <div key={method.id} className="p-4 border rounded-lg flex items-center gap-4">
@@ -103,7 +103,7 @@ export default function PaymentMethodsPage() {
 
         <section className="mt-8">
             <button className="w-full text-center py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 hover:border-gray-400 transition">
-                + Add New Payment Method
+                + Tambah Metode Pembayaran
             </button>
         </section>
       </main>

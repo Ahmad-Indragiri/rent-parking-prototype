@@ -53,7 +53,7 @@ export default function SearchPage() {
             <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
           </button>
           <h1 className="flex-grow text-xl font-bold text-center text-gray-800">
-            Search Parking
+            Cari Tempat Parkir
           </h1>
           <div className="w-7"></div> {/* Placeholder untuk menyeimbangkan header */}
         </header>

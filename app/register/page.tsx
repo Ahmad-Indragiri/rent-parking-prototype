@@ -55,17 +55,17 @@ export default function RegisterPage() {
   return (
     <div className="bg-white min-h-screen p-6">
       {/* Ganti form lama dengan ini agar ada input Nama & Kendaraan */}
-      <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
+      <h1 className="text-2xl font-bold text-center mb-6">Buat Akun</h1>
        <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto">
-          <input type="text" name="nama" placeholder="Full Name" onChange={handleChange} className="w-full p-3 bg-gray-100 rounded-lg"/>
-          <input type="text" name="kendaraan" placeholder="Vehicle Plate (e.g. B 1234 ABC)" onChange={handleChange} className="w-full p-3 bg-gray-100 rounded-lg"/>
+          <input type="text" name="nama" placeholder="Nama Lengkap" onChange={handleChange} className="w-full p-3 bg-gray-100 rounded-lg"/>
+          <input type="text" name="kendaraan" placeholder="Plat Nomor (contoh. B 1234 ABC)" onChange={handleChange} className="w-full p-3 bg-gray-100 rounded-lg"/>
           <input type="email" name="email" placeholder="Email" onChange={handleChange} className="w-full p-3 bg-gray-100 rounded-lg"/>
           <input type="password" name="password" placeholder="Password" onChange={handleChange} className="w-full p-3 bg-gray-100 rounded-lg"/>
-          <input type="password" name="confirmPassword" placeholder="Confirm Password" onChange={handleChange} className="w-full p-3 bg-gray-100 rounded-lg"/>
+          <input type="password" name="confirmPassword" placeholder="Konfirmasi Password Password" onChange={handleChange} className="w-full p-3 bg-gray-100 rounded-lg"/>
           
           {error && <p className="text-sm text-red-600 text-center">{error}</p>}
 
-          <button type="submit" className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg">Sign Up</button>
+          <button type="submit" className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg">Mendaftar</button>
        </form>
     </div>
   )

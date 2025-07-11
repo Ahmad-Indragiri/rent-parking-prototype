@@ -18,24 +18,19 @@ const dummyPaymentMethods: PaymentMethod[] = [
   { id: 3, type: 'Digital Wallet', details: 'Available balance: $100' },
 ];
 
-
 export default function PaymentPage() {
   const router = useRouter();
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [selectedMethodId, setSelectedMethodId] = useState<number | null>(null);
   const [totalBayar, setTotalBayar] = useState(0);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addMode, setAddMode] = useState<'card' | 'wallet' | null>(null);
 
   useEffect(() => {
-    // Simulasi mengambil metode pembayaran & data reservasi
     setPaymentMethods(dummyPaymentMethods);
-    
-    // Set metode pembayaran default
     const defaultMethod = dummyPaymentMethods.find(m => m.isDefault);
-    if (defaultMethod) {
-      setSelectedMethodId(defaultMethod.id);
-    }
-    
-    // Ambil total bayar dari reservasi sementara
+    if (defaultMethod) setSelectedMethodId(defaultMethod.id);
+
     const pendingData = localStorage.getItem('pending_reservasi');
     if (pendingData) {
       const reservasi = JSON.parse(pendingData);
@@ -48,33 +43,37 @@ export default function PaymentPage() {
       alert('Pilih metode pembayaran terlebih dahulu.');
       return;
     }
-    
+
     const pendingData = localStorage.getItem('pending_reservasi');
     if (!pendingData) {
       alert('Sesi reservasi berakhir. Mohon ulangi dari awal.');
       router.push('/dashboard');
       return;
     }
-    const finalReservasi = JSON.parse(pendingData);
 
+    const finalReservasi = JSON.parse(pendingData);
     finalReservasi.metode_pembayaran_id = selectedMethodId;
     finalReservasi.status = 'upcoming';
 
-    // 1. Simpan ke daftar reservasi utama (untuk riwayat)
     const allReservasi = JSON.parse(localStorage.getItem('reservasi_list') || '[]');
     allReservasi.push(finalReservasi);
     localStorage.setItem('reservasi_list', JSON.stringify(allReservasi));
 
-    // 2. Simpan juga sebagai "tiket aktif" untuk halaman selanjutnya
     localStorage.setItem('active_ticket', JSON.stringify(finalReservasi));
-
-    // 3. Hapus data sementara
     localStorage.removeItem('pending_reservasi');
-
-    // 4. Alihkan ke halaman tiket
     router.push('/ticket');
-};
+  };
 
+  const handleAddPayment = (name: string) => {
+    const newMethod: PaymentMethod = {
+      id: Date.now(),
+      type: addMode === 'card' ? 'Debit Card' : 'Digital Wallet',
+      details: name,
+    };
+    setPaymentMethods([...paymentMethods, newMethod]);
+    setShowAddModal(false);
+    setAddMode(null);
+  };
 
   return (
     <div className="bg-white min-h-screen">
@@ -84,7 +83,7 @@ export default function PaymentPage() {
           <ChevronLeftIcon className="w-6 h-6 text-gray-800" />
         </button>
         <h1 className="flex-grow text-xl font-bold text-center text-gray-900">
-          Payment Method
+          Metode Pembayaran
         </h1>
         <div className="w-7" />
       </header>
@@ -92,15 +91,14 @@ export default function PaymentPage() {
       <main className="p-6 pb-28">
         {/* Daftar Metode Pembayaran */}
         <section>
-          <h2 className="font-bold text-lg mb-2">Payment Methods</h2>
+          <h2 className="font-bold text-lg mb-2">Metode Pembayaran</h2>
           <div className="space-y-3">
             {paymentMethods.map(method => (
               <div
                 key={method.id}
                 onClick={() => setSelectedMethodId(method.id)}
-                className={`flex items-center p-4 border rounded-lg cursor-pointer transition ${
-                  selectedMethodId === method.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-                }`}
+                className={`flex items-center p-4 border rounded-lg cursor-pointer transition ${selectedMethodId === method.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                  }`}
               >
                 <input
                   type="radio"
@@ -122,15 +120,27 @@ export default function PaymentPage() {
 
         {/* Tambah Metode Pembayaran */}
         <section>
-          <h2 className="font-bold text-lg mb-2">Add Payment Method</h2>
+          <h2 className="font-bold text-lg mb-2">Tambahkan Metode Pembayaran</h2>
           <div className="space-y-2">
-            <button className="flex items-center w-full p-3 space-x-4 rounded-lg hover:bg-gray-100">
+            <button
+              onClick={() => {
+                setAddMode('card');
+                setShowAddModal(true);
+              }}
+              className="flex items-center w-full p-3 space-x-4 rounded-lg hover:bg-gray-100"
+            >
               <div className="p-2 bg-gray-100 rounded-md"><CreditCardIcon className="w-6 h-6 text-gray-700" /></div>
-              <span className="font-medium text-gray-800">Add Credit or Debit Card</span>
+              <span className="font-medium text-gray-800">Tambahkan Kartu Kredit atau Debit</span>
             </button>
-            <button className="flex items-center w-full p-3 space-x-4 rounded-lg hover:bg-gray-100">
+            <button
+              onClick={() => {
+                setAddMode('wallet');
+                setShowAddModal(true);
+              }}
+              className="flex items-center w-full p-3 space-x-4 rounded-lg hover:bg-gray-100"
+            >
               <div className="p-2 bg-gray-100 rounded-md"><CreditCardIcon className="w-6 h-6 text-gray-700" /></div>
-              <span className="font-medium text-gray-800">Add Digital Wallet</span>
+              <span className="font-medium text-gray-800">Tambahkan Dompet Digital</span>
             </button>
           </div>
         </section>
@@ -145,6 +155,40 @@ export default function PaymentPage() {
           Pay Rp{totalBayar.toLocaleString()}
         </button>
       </div>
+
+      {/* Modal Pilihan Tambahan */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue bg-opacity-40">
+          <div className="bg-white rounded-xl shadow-lg w-11/12 max-w-md mx-auto p-6">
+            <h3 className="text-lg font-bold mb-4 text-center">
+              {addMode === 'card' ? 'Pilih Bank Anda' : 'Pilih Dompet Digital'}
+            </h3>
+
+            <div className="space-y-3">
+              {(addMode === 'card'
+                ? ['BCA', 'BRI', 'Mandiri', 'BNI', 'CIMB Niaga']
+                : ['DANA', 'OVO', 'GoPay', 'LinkAja']
+              ).map((name) => (
+                <button
+                  key={name}
+                  onClick={() => handleAddPayment(name)}
+                  className="w-full p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-100"
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setShowAddModal(false)}
+              className="mt-6 w-full py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300"
+            >
+              Batal
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

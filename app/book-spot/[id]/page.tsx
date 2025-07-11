@@ -58,7 +58,7 @@ export default function BookSpotPage() {
           <ChevronLeftIcon className="w-6 h-6 text-gray-800" />
         </button>
         <h1 className="flex-grow text-xl font-bold text-center text-gray-900">
-          Book a spot
+        Pesan tempat
         </h1>
         <div className="w-7" />
       </header>
@@ -97,9 +97,9 @@ export default function BookSpotPage() {
 
         <div className="mt-6 p-4 border-t border-gray-200 text-sm">
             <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-white border"></div><span>Available</span></div>
-                <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-blue-600"></div><span>Selected</span></div>
-                <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-gray-300"></div><span>Taken</span></div>
+                <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-white border"></div><span>Tersedia</span></div>
+                <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-blue-600"></div><span>Terpilih</span></div>
+                <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-gray-300"></div><span>Sudah ditempati</span></div>
             </div>
         </div>
 
@@ -112,7 +112,7 @@ export default function BookSpotPage() {
           disabled={!selectedSpot}
           className="w-full bg-blue-600 text-white font-bold py-4 rounded-lg text-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
-          {selectedSpot ? `Continue to Payment` : 'Book a spot'}
+          {selectedSpot ? `Lanjutkan ke Pembayaran` : 'Book a spot'}
         </button>
       </div>
     </div>

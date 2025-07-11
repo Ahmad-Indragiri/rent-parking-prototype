@@ -75,7 +75,7 @@ export default function RiwayatPage() {
             <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
           </button>
           <h1 className="flex-grow text-xl font-bold text-center text-gray-800">
-            Reservations
+            Reservasi
           </h1>
           <div className="w-7" />
         </header>
@@ -88,7 +88,7 @@ export default function RiwayatPage() {
               : 'text-gray-500'
               }`}
           >
-            Upcoming
+            Mendatang
           </button>
           <button
             onClick={() => setActiveTab('past')}
@@ -97,7 +97,7 @@ export default function RiwayatPage() {
               : 'text-gray-500'
               }`}
           >
-            Past
+            Lampau
           </button>
         </nav>
 

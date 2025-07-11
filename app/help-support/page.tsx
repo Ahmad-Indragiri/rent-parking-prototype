@@ -13,20 +13,20 @@ type FaqItem = {
 
 const faqs: FaqItem[] = [
   {
-    question: 'How do I reserve a parking spot?',
-    answer: 'You can reserve a spot by selecting a location from the main dashboard, choosing your duration, and completing the payment process. Your spot will be confirmed via a QR code ticket.',
+    question: 'Bagaimana cara memesan tempat parkir?',
+    answer: 'Anda dapat memesan tempat dengan memilih lokasi dari dasbor utama, memilih durasi, dan menyelesaikan proses pembayaran. Tempat Anda akan dikonfirmasi melalui tiket kode QR.',
   },
   {
-    question: 'How do I cancel a reservation?',
-    answer: 'To cancel a reservation, go to the "Reservations" tab, find your upcoming booking, and select the "Cancel" option. Please note that cancellations are subject to our policy.',
+    question: 'Bagaimana cara membatalkan reservasi?',
+    answer: 'Untuk membatalkan reservasi, buka tab "Reservasi", temukan pemesanan Anda yang akan datang, lalu pilih opsi "Batal". Harap diperhatikan bahwa pembatalan tunduk pada kebijakan kami.',
   },
   {
-    question: 'What payment methods are accepted?',
-    answer: 'We accept major credit cards, debit cards, and various digital wallets. You can manage your payment methods in the "Account" > "Payment Methods" section.',
+    question: 'Metode pembayaran apa yang diterima?',
+    answer: 'Kami menerima kartu kredit utama, kartu debit, dan berbagai dompet digital. Anda dapat mengelola metode pembayaran di bagian "Akun" > "Metode Pembayaran".',
   },
   {
-    question: 'My QR code is not scanning. What should I do?',
-    answer: 'Ensure your screen brightness is turned up. If it still doesn\'t work, please show your booking details in the app to the parking attendant for manual verification.',
+    question: 'Kode QR saya tidak terpindai. Apa yang harus saya lakukan?',
+    answer: 'Pastikan kecerahan layar Anda sudah ditingkatkan. Jika masih tidak berfungsi, harap tunjukkan detail pemesanan Anda di aplikasi kepada petugas parkir untuk verifikasi manual.',
   },
 ];
 
@@ -46,33 +46,33 @@ export default function HelpAndSupportPage() {
           <ChevronLeftIcon className="w-6 h-6 text-gray-800" />
         </button>
         <h1 className="flex-grow text-xl font-bold text-center text-gray-900">
-          Help & Support
+        Bantuan & Dukungan
         </h1>
         <div className="w-7" />
       </header>
 
       <main className="p-6">
         <section className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-800">How can we help?</h2>
-            <p className="text-gray-500 mt-1">Find answers to your questions or contact us.</p>
+            <h2 className="text-2xl font-bold text-gray-800">Bagaimana kami dapat membantu?</h2>
+            <p className="text-gray-500 mt-1">Temukan jawaban atas pertanyaan Anda atau hubungi kami.</p>
         </section>
 
         {/* Opsi Kontak */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             <a href="mailto:support@parksmart.com" className="flex flex-col items-center justify-center p-6 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
                 <EnvelopeIcon className="w-8 h-8 text-blue-600 mb-2"/>
-                <span className="font-semibold text-gray-800">Email Us</span>
+                <span className="font-semibold text-gray-800">Email kami</span>
             </a>
             <a href="tel:+123456789" className="flex flex-col items-center justify-center p-6 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
                 <PhoneIcon className="w-8 h-8 text-blue-600 mb-2"/>
-                <span className="font-semibold text-gray-800">Call Us</span>
+                <span className="font-semibold text-gray-800">Hubungi kami</span>
             </a>
         </section>
 
 
         {/* FAQ Section */}
         <section>
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-4">Pertanyaan yang Sering Diajukan</h3>
           <div className="divide-y divide-gray-200 border-y border-gray-200">
             {faqs.map((faq, index) => (
               <div key={index}>

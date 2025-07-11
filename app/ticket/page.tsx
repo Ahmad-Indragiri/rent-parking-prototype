@@ -54,7 +54,7 @@ export default function TicketPage() {
 
             <main className="p-6 flex flex-col items-center">
                 <p className="text-center text-gray-600 max-w-xs mb-6">
-                    Scan the QR code at the entrance to check in and at the exit to check out.
+                Pindai kode QR di pintu masuk untuk check in dan di pintu keluar untuk check out.
                 </p>
 
                 <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 w-full max-w-sm">
@@ -76,7 +76,7 @@ export default function TicketPage() {
                     className="mt-8 w-full max-w-sm flex justify-center items-center gap-3 bg-blue-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-blue-700 transition"
                 >
                     <MapPinIcon className="w-6 h-6" />
-                    Start Navigation
+                    Mulai Navigasi
                 </button>
             </main>
         </div>

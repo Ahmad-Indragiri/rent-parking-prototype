@@ -73,14 +73,13 @@ export default function VehiclesPage() {
           <ChevronLeftIcon className="w-6 h-6 text-gray-800" />
         </button>
         <h1 className="flex-grow text-xl font-bold text-center text-gray-900">
-          Vehicles
+          Kendaraanmu
         </h1>
         <div className="w-7" />
       </header>
 
       <main className="p-6">
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-800">Your Vehicles</h2>
           
           {vehicles.map(vehicle => (
             <div key={vehicle.id} className="p-4 border rounded-lg flex items-center gap-4">
@@ -105,7 +104,7 @@ export default function VehiclesPage() {
             <form onSubmit={handleAddVehicle} className="p-4 border rounded-lg bg-gray-50 space-y-4">
                 <h3 className="font-semibold text-lg">Add New Vehicle</h3>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Vehicle Nickname (Optional)</label>
+                    <label className="block text-sm font-medium text-gray-700">Nama Kendaraan (Optional)</label>
                     <input
                         type="text"
                         value={newNickname}
@@ -115,7 +114,7 @@ export default function VehiclesPage() {
                     />
                 </div>
                  <div>
-                    <label className="block text-sm font-medium text-gray-700">License Plate</label>
+                    <label className="block text-sm font-medium text-gray-700">Plat Kendaraan</label>
                     <input
                         type="text"
                         value={newPlateNumber}
@@ -127,16 +126,16 @@ export default function VehiclesPage() {
                 </div>
                 <div className="flex gap-4">
                     <button type="button" onClick={() => setShowAddForm(false)} className="w-full py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300">
-                        Cancel
+                        Batal
                     </button>
                     <button type="submit" className="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700">
-                        Save Vehicle
+                        Simpan
                     </button>
                 </div>
             </form>
           ) : (
             <button onClick={() => setShowAddForm(true)} className="w-full text-center py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 hover:border-gray-400 transition">
-                + Add New Vehicle
+                + Tambah Kendaraanmu
             </button>
           )}
         </section>

@@ -21,7 +21,7 @@ export default function HomePage() {
         
         <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl w-full max-w-md">
           <h1 className="text-4xl font-bold mb-2">
-            ParkSmart
+            Rent Park
           </h1>
           <p className="text-gray-200 text-md mb-8">
             Pilih peran Anda untuk melanjutkan.

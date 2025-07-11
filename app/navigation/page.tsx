@@ -78,15 +78,15 @@ export default function NavigationPage() {
                  <div className="flex items-center gap-4 mb-6">
                     <div className="p-3 bg-gray-100 rounded-lg"><ClockIcon className="w-6 h-6 text-gray-700"/></div>
                     <div>
-                        <p className="font-bold text-lg">Arrive by {arrivalTime}</p>
-                        <p className="text-sm text-gray-500">Your spot is waiting for you</p>
+                        <p className="font-bold text-lg">Tiba di {arrivalTime}</p>
+                        <p className="text-sm text-gray-500">Tempatmu sudah menunggumu</p>
                     </div>
                 </div>
                 <button
                     onClick={() => router.push('/dashboard')}
                     className="w-full bg-blue-600 text-white font-bold py-4 rounded-lg text-lg"
                 >
-                    End Navigation
+                    Akhiri Navigasi
                 </button>
             </div>
         </div>

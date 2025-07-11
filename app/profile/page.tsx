@@ -53,7 +53,7 @@ export default function ProfilePage() {
           <ChevronLeftIcon className="w-6 h-6 text-gray-800" />
         </button>
         <h1 className="flex-grow text-xl font-bold text-center text-gray-900">
-          Profile
+          Profil
         </h1>
         <div className="w-7" />
       </header>
@@ -63,21 +63,21 @@ export default function ProfilePage() {
         <section className="flex flex-col items-center mb-8">
           <div className="relative w-32 h-32 mb-4">
             <Image
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?fit=crop&w=150&q=80"
+              src="/propil.jpg"
               alt="Profile Avatar"
               layout="fill"
               className="rounded-full object-cover"
             />
           </div>
           <button className="text-sm font-semibold text-blue-600 hover:underline">
-            Change Photo
+            Ganti Foto Profil
           </button>
         </section>
 
         {/* Detail Profil & Form Edit */}
         <section className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-500">Full Name</label>
+            <label className="block text-sm font-medium text-gray-500">Nama Lengkap</label>
             {isEditing ? (
               <input
                 type="text"
@@ -91,7 +91,7 @@ export default function ProfilePage() {
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-500">Email Address</label>
+            <label className="block text-sm font-medium text-gray-500">Alamat Email</label>
             {isEditing ? (
               <input
                 type="email"
@@ -105,7 +105,7 @@ export default function ProfilePage() {
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-500">Vehicle Plate</label>
+            <label className="block text-sm font-medium text-gray-500">Plat Kendaraan</label>
             {isEditing ? (
               <input
                 type="text"
