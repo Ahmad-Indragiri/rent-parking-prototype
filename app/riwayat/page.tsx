@@ -4,62 +4,83 @@ import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import BottomNav from '@/public/components/BottomNav'
-import { ChevronLeftIcon } from '@heroicons/react/24/outline'
+import { ChevronLeftIcon, CalendarDaysIcon, TrashIcon } from '@heroicons/react/24/outline' // Impor ikon hapus
 
-// Menggunakan 'tarif' agar konsisten dengan data yang disimpan
 type Reservasi = {
   id: number;
   nama_lokasi: string;
   alamat: string;
-  tarif: number; // Diubah dari 'harga' menjadi 'tarif'
+  tarif: number;
   gambar: string;
   status: 'upcoming' | 'past';
+  waktu_mulai: string;
 };
 
-// Data dummy disesuaikan menggunakan 'tarif'
 const dummyReservations: Reservasi[] = [
-  { id: 1, nama_lokasi: 'Parkir Mall A', alamat: 'Jl. Merdeka No.10', tarif: 5000, gambar: 'https://images.unsplash.com/photo-1543356983-33a7b441da23?w=300', status: 'upcoming' },
-  { id: 2, nama_lokasi: 'Parkir Kampus B', alamat: 'Mertoyudan', tarif: 5000, gambar: 'https://images.unsplash.com/photo-1506521781263-d5449e820979?w=300', status: 'past' },
-  { id: 3, nama_lokasi: 'Parkir Mall A', alamat: 'Jl. Merdeka No.10', tarif: 5000, gambar: 'https://images.unsplash.com/photo-1588117367383-af72591512a8?w=300', status: 'past' },
-  { id: 4, nama_lokasi: 'Parkir Kampus B', alamat: 'Mertoyudan', tarif: 5000, gambar: 'https://images.unsplash.com/photo-1590674899484-d5640e854c4a?w=300', status: 'upcoming' },
+  { id: 1, nama_lokasi: 'Parkir Mall A', alamat: 'Jl. Merdeka No.10', tarif: 5000, gambar: 'https://images.unsplash.com/photo-1543356983-33a7b441da23?w=300', status: 'upcoming', waktu_mulai: '2025-07-13T10:00:00Z' },
+  { id: 2, nama_lokasi: 'Parkir Kampus B', alamat: 'Mertoyudan', tarif: 5000, gambar: 'https://images.unsplash.com/photo-1506521781263-d5449e820979?w=300', status: 'past', waktu_mulai: '2025-07-11T14:30:00Z' },
 ];
 
-// Komponen item dibuat lebih aman
-const ReservationItem: React.FC<{ reservasi: Reservasi }> = ({ reservasi }) => (
-  <div className="flex items-center space-x-4 py-3">
-    <Image
-      src={reservasi.gambar || '/images/placeholder.png'} // gunakan gambar fallback jika kosong
-      alt={reservasi.nama_lokasi}
-      width={64}
-      height={64}
-      className="rounded-lg object-cover w-16 h-16"
-    />
+// --- Komponen ReservationItem Diperbarui ---
+const ReservationItem: React.FC<{ 
+  reservasi: Reservasi;
+  onClick: () => void;
+  onDelete: () => void;
+}> = ({ reservasi, onClick, onDelete }) => {
+  const formattedDate = new Date(reservasi.waktu_mulai).toLocaleString('id-ID', {
+    day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
 
-    <div className="flex-grow">
-      <p className="font-semibold text-gray-800">{reservasi.nama_lokasi}</p>
-      <p className="text-sm text-gray-500">{reservasi.alamat}</p>
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Mencegah navigasi saat tombol hapus diklik
+    onDelete();
+  };
+
+  return (
+    <div onClick={onClick} className="flex items-start space-x-4 py-4 text-left w-full hover:bg-gray-50 transition cursor-pointer">
+      <Image
+        src={reservasi.gambar || '/placeholder.png'}
+        alt={reservasi.nama_lokasi}
+        width={64} height={64}
+        className="rounded-lg object-cover w-16 h-16 flex-shrink-0"
+      />
+      <div className="flex-grow">
+        <p className="font-semibold text-gray-800">{reservasi.nama_lokasi}</p>
+        <p className="text-sm text-gray-500">{reservasi.alamat}</p>
+        <div className="flex items-center gap-1 mt-2 text-sm text-blue-600">
+            <CalendarDaysIcon className="w-4 h-4" />
+            <p className="font-medium">{formattedDate}</p>
+        </div>
+      </div>
+      <div className="flex flex-col items-end justify-between h-full min-h-[64px]">
+        <p className="font-semibold text-gray-800 flex-shrink-0">
+          Rp{reservasi.tarif?.toLocaleString() ?? '0'}
+        </p>
+        {/* Tombol hapus hanya muncul jika status 'past' */}
+        {reservasi.status === 'past' && (
+            <button onClick={handleDeleteClick} className="p-1 text-gray-400 hover:text-red-500">
+                <TrashIcon className="w-5 h-5"/>
+            </button>
+        )}
+      </div>
     </div>
-    {/* Menampilkan tarif dan aman dari error jika data tidak ada */}
-    <p className="font-semibold text-gray-800">
-      Rp{reservasi.tarif?.toLocaleString() ?? '0'}
-    </p>
-  </div>
-);
+  )
+};
 
-
-// --- KOMPONEN UTAMA ---
 export default function RiwayatPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
   const [reservasiList, setReservasiList] = useState<Reservasi[]>([]);
 
   useEffect(() => {
-    if (!localStorage.getItem('reservasi_list')) {
+    const savedList = localStorage.getItem('reservasi_list');
+    if (savedList) {
+      const parsedData = JSON.parse(savedList) as Reservasi[];
+      const listWithDate = parsedData.map((item) => ({...item, waktu_mulai: item.waktu_mulai || new Date().toISOString()}));
+      setReservasiList(listWithDate);
+    } else {
       localStorage.setItem('reservasi_list', JSON.stringify(dummyReservations));
-    }
-    const data = localStorage.getItem('reservasi_list');
-    if (data) {
-      setReservasiList(JSON.parse(data));
+      setReservasiList(dummyReservations);
     }
   }, []);
 
@@ -67,36 +88,34 @@ export default function RiwayatPage() {
     return reservasiList.filter((item) => item && item.status === activeTab);
   }, [reservasiList, activeTab]);
 
+  const handleViewMonitoring = (reservasi: Reservasi) => {
+    localStorage.setItem('monitoring_ticket', JSON.stringify(reservasi));
+    router.push(`/monitoring/${reservasi.id}`);
+  };
+
+  // --- FUNGSI BARU UNTUK HAPUS RIWAYAT ---
+  const handleDeleteReservation = (id: number) => {
+    if(window.confirm('Apakah Anda yakin ingin menghapus riwayat ini? Aksi ini tidak bisa dibatalkan.')) {
+        const newList = reservasiList.filter(res => res.id !== id);
+        setReservasiList(newList);
+        localStorage.setItem('reservasi_list', JSON.stringify(newList));
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen bg-white pb-20">
         <header className="flex items-center p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
-          <button onClick={() => router.back()} className="p-1">
-            <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
-          </button>
-          <h1 className="flex-grow text-xl font-bold text-center text-gray-800">
-            Reservasi
-          </h1>
+          <button onClick={() => router.back()} className="p-1"><ChevronLeftIcon className="w-6 h-6 text-gray-700" /></button>
+          <h1 className="flex-grow text-xl font-bold text-center text-gray-800">Reservasi</h1>
           <div className="w-7" />
         </header>
 
         <nav className="flex border-b border-gray-200">
-          <button
-            onClick={() => setActiveTab('upcoming')}
-            className={`flex-1 py-3 text-center font-semibold transition-all duration-200 ${activeTab === 'upcoming'
-              ? 'text-blue-600 border-b-2 border-blue-600'
-              : 'text-gray-500'
-              }`}
-          >
+          <button onClick={() => setActiveTab('upcoming')} className={`flex-1 py-3 text-center font-semibold transition-all duration-200 ${activeTab === 'upcoming' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}>
             Mendatang
           </button>
-          <button
-            onClick={() => setActiveTab('past')}
-            className={`flex-1 py-3 text-center font-semibold transition-all duration-200 ${activeTab === 'past'
-              ? 'text-blue-600 border-b-2 border-blue-600'
-              : 'text-gray-500'
-              }`}
-          >
+          <button onClick={() => setActiveTab('past')} className={`flex-1 py-3 text-center font-semibold transition-all duration-200 ${activeTab === 'past' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}>
             Lampau
           </button>
         </nav>
@@ -104,18 +123,18 @@ export default function RiwayatPage() {
         <main className="px-4">
           {filteredList.length > 0 ? (
             <div className="divide-y divide-gray-200">
-              {/* Filter data tidak valid sebelum di-map untuk mencegah error */}
+              {/* --- Logika Tampilan Diperbarui --- */}
               {filteredList.filter(Boolean).map((reservasi, index) => (
-                <ReservationItem key={`${reservasi.id}-${reservasi.status}-${index}`} reservasi={reservasi} />
+                <ReservationItem 
+                  key={`${reservasi.id}-${index}`}
+                  reservasi={reservasi}
+                  onClick={() => handleViewMonitoring(reservasi)}
+                  onDelete={() => handleDeleteReservation(reservasi.id)}
+                />
               ))}
-
             </div>
           ) : (
-            <div className="text-center py-20">
-              <p className="text-gray-600">
-                Tidak ada reservasi dalam kategori {activeTab}.
-              </p>
-            </div>
+            <div className="text-center py-20"><p className="text-gray-600">Tidak ada reservasi dalam kategori {activeTab}.</p></div>
           )}
         </main>
       </div>
