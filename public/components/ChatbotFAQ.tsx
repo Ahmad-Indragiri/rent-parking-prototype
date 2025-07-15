@@ -21,18 +21,29 @@ export default function ChatbotFAQ() {
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
 
-  // --- State untuk Fitur Drag & Drop Jendela Chat ---
+  // State untuk Fitur Drag & Drop Jendela Chat
   const [chatPosition, setChatPosition] = useState({ x: 0, y: 0 });
   const [isChatDragging, setIsChatDragging] = useState(false);
   const chatDragOffset = useRef({ x: 0, y: 0 });
   const chatboxRef = useRef<HTMLDivElement | null>(null);
   
-  // --- State BARU untuk Fitur Drag & Drop Tombol Ikon ---
-  const [buttonPosition, setButtonPosition] = useState({ x: window.innerWidth - 80, y: window.innerHeight - 120 });
+  // State untuk Fitur Drag & Drop Tombol Ikon
+  // --- PERBAIKAN DI SINI ---
+  // Inisialisasi dengan nilai default, bukan window
+  const [buttonPosition, setButtonPosition] = useState({ x: -9999, y: -9999 });
   const [isButtonDragging, setIsButtonDragging] = useState(false);
   const buttonDragOffset = useRef({ x: 0, y: 0 });
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const wasDragged = useRef(false);
+
+  // --- PERBAIKAN DI SINI ---
+  // Gunakan useEffect untuk mengatur posisi awal di sisi klien
+  useEffect(() => {
+    setButtonPosition({
+        x: window.innerWidth - 80,
+        y: window.innerHeight - 120
+    });
+  }, []); // Array kosong memastikan ini hanya berjalan sekali setelah mount
 
   // Efek untuk menempatkan chatbox di posisi awal
   useEffect(() => {
@@ -102,7 +113,6 @@ export default function ChatbotFAQ() {
 
   const handleButtonMouseUp = () => {
     setIsButtonDragging(false);
-    // Reset wasDragged setelah beberapa saat untuk memastikan onClick tidak terpicu
     setTimeout(() => {
       wasDragged.current = false;
     }, 50);
@@ -120,7 +130,6 @@ export default function ChatbotFAQ() {
   }, [isButtonDragging]);
 
   const handleButtonClick = () => {
-    // Hanya buka jendela jika tombol tidak digeser
     if (!wasDragged.current) {
         setIsOpen(!isOpen);
     }
