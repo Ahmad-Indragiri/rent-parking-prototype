@@ -21,25 +21,51 @@ const dummyPromotions: Promotion[] = [
   { id: 3, title: 'First Time User', description: 'Diskon Pengguna Baru!', image: '/new.png', kode: 'PROMO10' },
 ]
 
+// Tipe data registrasi dari admin
+type Registration = {
+  id: number;
+  nama_lokasi: string;
+  alamat: string;
+  tarif: number;
+  total_slot: number;
+  gambar: string;
+};
+
+// --- KOMPONEN UTAMA ---
 export default function Dashboard() {
   const router = useRouter();
   const [lokasiList, setLokasiList] = useState<Lokasi[]>([]);
   const [ulasanList, setUlasanList] = useState<Ulasan[]>([]);
-  const [activeFilter, setActiveFilter] = useState('Promotions');
+  const [activeFilter, setActiveFilter] = useState('Nearby');
   
   // State untuk form ulasan
   const [komentar, setKomentar] = useState('');
   const [rating, setRating] = useState(5);
-  const [selectedLokasiId, setSelectedLokasiId] = useState<string>(''); // Diubah ke string untuk handle option default
+  const [selectedLokasiId, setSelectedLokasiId] = useState<string>('');
 
-  // State baru
+  // State untuk UI
   const [userName, setUserName] = useState('');
   const [showReviewForm, setShowReviewForm] = useState(false);
 
   const MapView = dynamic(() => import('@/public/components/MapView'), { ssr: false });
 
   useEffect(() => {
-    fetch('/data/lokasi.json').then((res) => res.json()).then((data) => setLokasiList(data));
+    // Mengambil data lokasi dari localStorage yang dikelola admin
+    const savedData = localStorage.getItem('parkings_data');
+    if (savedData) {
+        const registrations: Registration[] = JSON.parse(savedData);
+        const transformedList = registrations.map(reg => ({
+            id: reg.id,
+            nama: reg.nama_lokasi,
+            alamat: reg.alamat,
+            tarif: reg.tarif,
+            total_slot: reg.total_slot,
+            gambar: reg.gambar,
+            slot_tersedia: Math.floor(reg.total_slot * 0.4),
+            rating: 4.5,
+        }));
+        setLokasiList(transformedList);
+    }
     
     const allUlasan = JSON.parse(localStorage.getItem('ulasanList') || '[]');
     setUlasanList(allUlasan.slice(-3).reverse());
@@ -82,8 +108,10 @@ export default function Dashboard() {
     setKomentar('');
     setRating(5);
     setSelectedLokasiId('');
-    setUlasanList(all.slice(-3).reverse()); // Refresh ulasan terbaru
-    setShowReviewForm(false); // Sembunyikan form setelah submit
+    // --- PERBAIKAN DI SINI ---
+    // Refresh daftar ulasan dengan 3 yang paling baru dari semua data
+    setUlasanList(all.slice(-3).reverse()); 
+    setShowReviewForm(false);
     alert('Ulasan berhasil dikirim!');
   };
 
@@ -96,9 +124,9 @@ export default function Dashboard() {
             <div className="flex gap-4 pb-4 mt-3 -mx-4 px-4 overflow-x-auto">
               {dummyPromotions.map(promo => (
                 <button key={promo.id} onClick={() => handlePromoClick(promo)} className="flex-shrink-0 w-2/3 md:w-1/3 text-left transition-transform transform hover:-translate-y-1">
-                  <div className="shadow-md rounded-lg overflow-hidden">
+                  <div className="shadow-md rounded-lg overflow-hidden bg-white">
                     <Image src={promo.image} alt={promo.title} width={300} height={150} className="object-cover w-full h-24" />
-                    <div className="p-3 bg-white">
+                    <div className="p-3">
                         <h3 className="font-semibold text-gray-800">{promo.title}</h3>
                         <p className="text-sm text-gray-500">{promo.description}</p>
                     </div>
@@ -115,7 +143,7 @@ export default function Dashboard() {
             <div className="mt-3 space-y-4">
               {lokasiList.length > 0 ? (
                 lokasiList.map((lokasi) => <ParkirCard key={lokasi.id} lokasi={lokasi} />)
-              ) : ( <p>Memuat data parkir...</p> )}
+              ) : ( <p className="text-center text-gray-500">Belum ada lokasi parkir yang terdaftar.</p> )}
             </div>
           </section>
         );
@@ -154,13 +182,13 @@ export default function Dashboard() {
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold text-gray-800">Ulasan Pengguna</h2>
                 <button onClick={() => setShowReviewForm(!showReviewForm)} className="text-sm font-semibold text-blue-600 hover:underline">
-                {showReviewForm ? 'Tutup' : 'Tulis Ulasan'}
+                  {showReviewForm ? 'Tutup' : 'Tulis Ulasan'}
                 </button>
             </div>
             {showReviewForm && (
                 <div className="mt-4 p-4 border rounded-lg bg-white shadow-sm animate-fade-in-up">
                     <div className="space-y-3">
-                        <select className="w-full p-3 bg-gray-100 rounded-lg" value={selectedLokasiId ?? ''} onChange={(e) => setSelectedLokasiId(e.target.value)}>
+                        <select className="w-full p-3 bg-gray-100 rounded-lg" value={selectedLokasiId} onChange={(e) => setSelectedLokasiId(e.target.value)}>
                             <option value="" disabled>Pilih Lokasi untuk Diulas</option>
                             {lokasiList.map((lokasi) => (<option key={lokasi.id} value={lokasi.id}>{lokasi.nama}</option>))}
                         </select>

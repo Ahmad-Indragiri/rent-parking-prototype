@@ -2,6 +2,17 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { BuildingStorefrontIcon, ChevronLeftIcon } from '@heroicons/react/24/solid'
+
+// Tipe data untuk mencocokkan data yang disimpan oleh admin
+type Registration = {
+  id: number;
+  owner: {
+    email: string;
+    password: string;
+  }
+  // properti lain tidak perlu didefinisikan di sini
+};
 
 export default function OwnerLoginPage() {
   const router = useRouter();
@@ -11,70 +22,69 @@ export default function OwnerLoginPage() {
 
   const handleOwnerLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // --- LOGIKA LOGIN OWNER SEDERHANA ---
-    // Di aplikasi nyata, Anda akan memvalidasi ini ke database owner
-    const OWNER_EMAIL = 'aaa@aaa';
-    const OWNER_PASSWORD = 'qwerty';
+    setError('');
 
-    if (email === OWNER_EMAIL && password === OWNER_PASSWORD) {
-      // Simpan data owner yang login (simulasi)
-      const ownerData = {
-        email: OWNER_EMAIL,
-        name: 'John Doe',
-        locationManaged: 'Parking Spot A' // Lokasi yang dikelola owner ini
-      };
+    const allData: Registration[] = JSON.parse(localStorage.getItem('parkings_data') || '[]');
+    const foundOwnerRegistration = allData.find(
+      reg => reg.owner.email === email && reg.owner.password === password
+    );
+
+    if (foundOwnerRegistration) {
       localStorage.setItem('isOwnerLoggedIn', 'true');
-      localStorage.setItem('ownerData', JSON.stringify(ownerData));
+      localStorage.setItem('owner_session_data', JSON.stringify(foundOwnerRegistration));
       router.push('/owner/dashboard');
     } else {
-      setError('Invalid owner email or password.');
+      setError('Email atau password owner tidak valid.');
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white p-6">
-      {/* Header */}
-      <header className="flex w-full items-center">
-        <button onClick={() => router.back()} className="text-gray-800">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-6 w-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
-        </button>
-        <h1 className="flex-grow text-center text-xl font-bold text-gray-800">
-          Owner Log in
-        </h1>
-        <div className="h-6 w-6"></div>
-      </header>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-xl">
+        
+        <div className="relative flex justify-center items-center">
+            <button onClick={() => router.back()} className="absolute left-0 p-2 rounded-full hover:bg-gray-100">
+                <ChevronLeftIcon className="w-6 h-6 text-gray-600" />
+            </button>
+            <h1 className="text-2xl font-bold text-center text-gray-800">
+                Owner Login
+            </h1>
+        </div>
+        
+        <div className="text-center pt-4">
+            <BuildingStorefrontIcon className="w-16 h-16 mx-auto text-green-500"/>
+            <p className="mt-2 text-gray-600">Login untuk memantau properti Anda.</p>
+        </div>
 
-      {/* Form Container */}
-      <div className="flex flex-grow flex-col justify-center">
-        <form onSubmit={handleOwnerLogin} className="w-full max-w-sm self-center">
-          <div className="mb-4">
+        <form onSubmit={handleOwnerLogin} className="space-y-4">
+          <div>
+            <label className="sr-only">Email</label>
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md bg-gray-100 p-4 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg bg-gray-100 p-4 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
             />
           </div>
-
-          <div className="mb-4">
+          <div>
+            <label className="sr-only">Password</label>
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md bg-gray-100 p-4 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg bg-gray-100 p-4 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
             />
           </div>
           
-          {error && <p className="mb-4 text-center text-sm text-red-500">{error}</p>}
+          {error && <p className="text-center text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
-            className="w-full rounded-md bg-green-600 py-4 font-semibold text-white transition hover:bg-green-700"
+            className="w-full rounded-lg bg-green-600 py-4 font-semibold text-white transition hover:bg-green-700 shadow-sm hover:shadow-md"
           >
             Log in as Owner
           </button>

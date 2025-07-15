@@ -1,58 +1,67 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import OwnerHeader from '../components/OwnerHeader'
+import OwnerBottomNav from '../components/OwnerBottomNav'
 import {
-  HomeIcon, ChartPieIcon, MapPinIcon, UserCircleIcon,
-  ArrowDownOnSquareIcon, CameraIcon, TicketIcon, ClockIcon
+  ArrowDownOnSquareIcon, CameraIcon, TicketIcon, ClockIcon,
+  UsersIcon, ArrowUpRightIcon, ArrowDownRightIcon,
+  MapPinIcon // <-- Ikon ditambahkan di sini
 } from '@heroicons/react/24/solid'
 
-// --- Komponen Navigasi ---
-const OwnerHeader = () => {
-    // Variabel router yang tidak terpakai dihapus
-    return (
-        <header className="sticky top-0 z-20 flex items-center justify-between p-4 bg-white">
-            <h1 className="text-xl font-bold text-gray-900">Home</h1>
-            <div className="w-7" />
-        </header>
-    )
+// --- Tipe Data ---
+type Owner = { 
+    nama: string; 
+};
+type Reservasi = { 
+    nama_lokasi: string; 
+    user: { kendaraan: string }; 
+    waktu_mulai: string; 
+    status: 'upcoming' | 'past' | 'active' 
+};
+type Lokasi = { 
+    nama: string, 
+    total_slot: number 
 };
 
-const OwnerBottomNav = () => {
-    const router = useRouter();
-    const pathname = usePathname();
-    const navItems = [
-        { href: '/owner/home', icon: HomeIcon, label: 'Home' },
-        { href: '/owner/dashboard', icon: ChartPieIcon, label: 'Dashboard' },
-        { href: '/owner/locations', icon: MapPinIcon, label: 'Locations' },
-        { href: '/owner/account', icon: UserCircleIcon, label: 'Account' },
-    ];
+// --- Komponen-komponen UI Baru ---
+
+// Kartu Statistik yang lebih baik
+const LiveStatCard: React.FC<{ title: string; value: number; icon: React.ElementType; change: number }> = ({ title, value, icon: Icon, change }) => {
+    const isIncrease = change >= 0;
     return (
-        <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200">
-            <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
-                {navItems.map(item => {
-                    const isActive = pathname === item.href;
-                    const activeClass = "text-blue-600";
-                    const inactiveClass = "text-gray-500 hover:text-blue-600";
-                    return (
-                        <button key={item.label} onClick={() => router.push(item.href)} type="button" className="inline-flex flex-col items-center justify-center px-5 group">
-                            <item.icon className={`w-6 h-6 mb-1 ${isActive ? activeClass : inactiveClass}`}/>
-                            <span className={`text-sm ${isActive ? activeClass : inactiveClass}`}>{item.label}</span>
-                        </button>
-                    )
-                })}
+        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+            <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg ${isIncrease ? 'bg-green-100' : 'bg-red-100'}`}>
+                    <Icon className={`w-6 h-6 ${isIncrease ? 'text-green-600' : 'text-red-600'}`} />
+                </div>
+                <p className="font-semibold text-gray-600">{title}</p>
+            </div>
+            <p className="text-4xl font-bold text-gray-800 mt-3">{value}</p>
+            <div className="flex items-center text-xs mt-1">
+                <span className={`flex items-center gap-1 ${isIncrease ? 'text-green-600' : 'text-red-600'}`}>
+                    {isIncrease ? <ArrowUpRightIcon className="w-3 h-3"/> : <ArrowDownRightIcon className="w-3 h-3"/>}
+                    {Math.abs(change)} hari ini
+                </span>
             </div>
         </div>
-    )
+    );
 };
 
-// Tipe data
-type Reservasi = { nama_lokasi: string; user: { kendaraan: string }; waktu_mulai: string; status: 'upcoming' | 'past' | 'active' };
-type Lokasi = { nama: string, total_slot: number };
+// Tombol Aksi Cepat yang lebih baik
+const QuickActionButton: React.FC<{ title: string; icon: React.ElementType }> = ({ title, icon: Icon }) => (
+    <button className="p-4 bg-white rounded-2xl border text-left font-semibold text-gray-700 hover:bg-gray-100 hover:shadow-lg transition-all duration-300 shadow-sm">
+        <Icon className="w-8 h-8 text-blue-600 mb-2"/> 
+        <span>{title}</span>
+    </button>
+);
 
+
+// --- Komponen Utama Halaman ---
 export default function OwnerHomePage() {
   const router = useRouter();
-  // State 'owner' dihapus karena tidak digunakan
+  const [owner, setOwner] = useState<Owner | null>(null);
   const [liveStats, setLiveStats] = useState({ parked: 0, available: 0 });
   const [activityFeed, setActivityFeed] = useState<Reservasi[]>([]);
 
@@ -62,13 +71,15 @@ export default function OwnerHomePage() {
       return;
     }
 
-    const ownerData = JSON.parse(localStorage.getItem('ownerData') || '{}');
+    const ownerSessionData = JSON.parse(localStorage.getItem('owner_session_data') || '{}');
     const allLocations: Lokasi[] = JSON.parse(localStorage.getItem('parking_locations') || '[]');
     const allReservations: Reservasi[] = JSON.parse(localStorage.getItem('reservasi_list') || '[]');
     
-    if (ownerData.locationManaged) {
-        const myLocation = allLocations.find(loc => loc.nama === ownerData.locationManaged);
-        const myReservations = allReservations.filter(res => res.nama_lokasi === ownerData.locationManaged);
+    setOwner(ownerSessionData.owner);
+    
+    if (ownerSessionData.nama_lokasi) {
+        const myLocation = allLocations.find(loc => loc.nama === ownerSessionData.nama_lokasi);
+        const myReservations = allReservations.filter(res => res.nama_lokasi === ownerSessionData.nama_lokasi);
         
         const currentlyParked = myReservations.filter(res => res.status === 'active' || res.status === 'upcoming').length;
         
@@ -81,40 +92,39 @@ export default function OwnerHomePage() {
     }
   }, [router]);
 
+  if (!owner) {
+      return <div className="p-4 text-center">Loading...</div>;
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen pb-20">
       <div className="bg-blue-600 h-1.5 w-full"></div>
-      <OwnerHeader />
+      <OwnerHeader title="Beranda" />
 
-      <main className="p-4 space-y-6">
-        {/* Live Stats */}
-        <section className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-white rounded-xl border">
-                <p className="text-sm text-gray-500">Currently Parked</p>
-                <p className="text-3xl font-bold">{liveStats.parked}</p>
-            </div>
-             <div className="p-4 bg-white rounded-xl border">
-                <p className="text-sm text-gray-500">Available Spots</p>
-                <p className="text-3xl font-bold">{liveStats.available}</p>
-            </div>
+      <main className="p-4 md:p-6 space-y-8">
+        <section>
+            <h2 className="text-2xl font-bold text-gray-800">Halo, {owner.nama}!</h2>
+            <p className="text-gray-500">Berikut adalah kondisi terkini di lokasi Anda.</p>
         </section>
 
-        {/* Quick Actions */}
+        {/* Live Stats yang Diperbarui */}
+        <section className="grid grid-cols-2 gap-4">
+            <LiveStatCard title="Sedang Parkir" value={liveStats.parked} icon={UsersIcon} change={-2}/>
+            <LiveStatCard title="Slot Tersedia" value={liveStats.available} icon={MapPinIcon} change={+5}/>
+        </section>
+
+        {/* Quick Actions yang Diperbarui */}
         <section>
-             <h2 className="text-lg font-bold mb-3 text-gray-700">Quick Actions</h2>
+             <h3 className="text-lg font-bold mb-3 text-gray-700">Aksi Cepat</h3>
              <div className="grid grid-cols-2 gap-4">
-                <button className="p-4 bg-white rounded-xl border text-left font-semibold text-gray-700 hover:bg-gray-100">
-                    <ArrowDownOnSquareIcon className="w-7 h-7 text-blue-600 mb-2"/> Manual Check-in
-                </button>
-                 <button className="p-4 bg-white rounded-xl border text-left font-semibold text-gray-700 hover:bg-gray-100">
-                    <CameraIcon className="w-7 h-7 text-blue-600 mb-2"/> View Live Camera
-                </button>
+                <QuickActionButton title="Check-in Manual" icon={ArrowDownOnSquareIcon}/>
+                <QuickActionButton title="Lihat Kamera CCTV" icon={CameraIcon}/>
              </div>
         </section>
 
-        {/* Activity Feed */}
+        {/* Activity Feed yang Diperbarui */}
         <section>
-            <h2 className="text-lg font-bold mb-3 text-gray-700">Recent Activity</h2>
+            <h3 className="text-lg font-bold mb-3 text-gray-700">Aktivitas Terbaru</h3>
             <div className="space-y-3">
                 {activityFeed.length > 0 ? activityFeed.map((item, index) => (
                     <div key={index} className="flex items-center gap-4 p-4 bg-white rounded-xl border">
@@ -122,17 +132,19 @@ export default function OwnerHomePage() {
                             <TicketIcon className="w-6 h-6 text-blue-600"/>
                         </div>
                         <div>
-                            <p className="font-semibold">
-                                {item.user.kendaraan || 'N/A'} checked in
+                            <p className="font-semibold text-gray-800">
+                                {item.user.kendaraan || 'Kendaraan'} check-in
                             </p>
                             <p className="text-sm text-gray-500 flex items-center gap-1">
                                 <ClockIcon className="w-4 h-4"/> 
-                                {new Date(item.waktu_mulai).toLocaleTimeString()}
+                                {new Date(item.waktu_mulai).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                             </p>
                         </div>
                     </div>
                 )) : (
-                    <p className="text-center text-gray-500 py-4">No recent activity.</p>
+                    <div className="text-center py-8 bg-white rounded-xl border">
+                        <p className="text-gray-500">Belum ada aktivitas terbaru.</p>
+                    </div>
                 )}
             </div>
         </section>
